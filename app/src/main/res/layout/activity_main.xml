@@ -9,44 +9,11 @@
 
 
 
-    <EditText
-        android:id="@+id/txtName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/txtPrice"
-        app:layout_constraintTop_toTopOf="parent"
-        android:hint="Name"
-        />
-
-    <EditText
-        android:id="@+id/txtPrice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Price"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtName"
-        app:layout_constraintBottom_toTopOf="@id/btnAdd"
-        />
-
-    <Button
-        android:id="@+id/btnAdd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtPrice"
-        app:layout_constraintBottom_toTopOf="@id/totalPrice"
-        android:text="Add"
-        />
-
     <TextView
         android:id="@+id/lbCurrency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/btnAdd"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/dbtable"
         app:layout_constraintStart_toEndOf="@id/totalPrice"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +25,7 @@
         android:id="@+id/totalPrice"
         android:layout_width="0pt"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/btnAdd"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/dbtable"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/lbCurrency"
@@ -75,8 +42,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/totalPrice"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnClearBag"
         >
     </TableLayout>
+
+    <Button
+        android:id="@+id/btnClearBag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnGoToDBEditor"
+        app:layout_constraintTop_toBottomOf="@+id/dbtable"
+        android:text="Clear bag"
+        android:background="@drawable/brush"
+        android:layout_margin="3dp"
+        />
+    <Button
+        android:id="@+id/btnGoToDBEditor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnClearBag"
+        android:text="Move to database"
+        android:background="@drawable/brush"
+        android:layout_margin="3dp"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

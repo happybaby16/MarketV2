@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ArrayList<ShopBag> Bag;
      TextView total_price;
-     Button Add;
-     EditText Name, Price;
+     Button GoToDBEditor, ClearBag;
 
      TextView Currency;
      String currency;
@@ -62,12 +61,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Currency = findViewById(R.id.lbCurrency);
         Currency.setText(currency);
 
-        Name = findViewById(R.id.txtName);
 
-        Price = findViewById(R.id.txtPrice);
 
-        Add = findViewById(R.id.btnAdd);
-        Add.setOnClickListener(this::onClick);
+        GoToDBEditor = findViewById(R.id.btnGoToDBEditor);
+        GoToDBEditor.setOnClickListener(this::onClick);
+
+        ClearBag = findViewById(R.id.btnClearBag);
+        ClearBag.setOnClickListener(this::RemoveDrop);
 
 
         total_price = findViewById(R.id.totalPrice);
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ImageButton delete = new ImageButton(this);
                 delete.setImageResource(R.drawable.ic_baseline_trash);
                 delete.setId(cursor.getInt(idIndex));
-                delete.setOnClickListener(this::onClick);
+                delete.setOnClickListener(this::RemoveDrop);
                 dbOutputRow.addView(delete);
 
 
@@ -142,54 +142,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         database = dbHelper.getWritableDatabase();
         switch (v.getId())
         {
-            case R.id.btnAdd:
-                String name = Name.getText().toString();
-                String price = Price.getText().toString();
 
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(DBHelper.KEY_NAME, name);
-                contentValues.put(DBHelper.KEY_PRICE, price);
-
-                database.insert(DBHelper.TABLE_DROPS, null, contentValues);
-                Name.setText("");
-                Price.setText("");
-                CreateDropListView();
-                break;
-            default:
-                RemoveDrop(v);//Удаление предметов из корзины покупок и пересчёт итоговой суммы корзины
-
-
-
-
-                database.delete(DBHelper.TABLE_DROPS,DBHelper.KEY_ID +" = ?", new String[]{String.valueOf(v.getId())});
-                CreateDropListView();
-                Cursor cursor = database.query(DBHelper.TABLE_DROPS,null,null,null,null,null,null);
-                if(cursor.moveToFirst())
-                {
-                    int idIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
-                    int nameIndex = cursor.getColumnIndex(DBHelper.KEY_NAME);
-                    int priceIndex = cursor.getColumnIndex(DBHelper.KEY_PRICE);
-                    int realID =1;
-                    do {
-                        if(realID<cursor.getInt(idIndex))
-                        {
-                            ContentValues content = new ContentValues();
-                            content.put(DBHelper.KEY_ID, realID);
-                            content.put(DBHelper.KEY_NAME, cursor.getString(nameIndex));
-                            content.put(DBHelper.KEY_PRICE, cursor.getString(priceIndex));
-                            database.replace(DBHelper.TABLE_DROPS,null,content);
-                        }
-                        realID++;
-                    }while (cursor.moveToNext());
-                    if(cursor.moveToLast()&&realID==cursor.getInt(idIndex))
-                    {
-                        database.delete(DBHelper.TABLE_DROPS, DBHelper.KEY_ID + " = ?", new String[]{cursor.getString(idIndex)});
-                    }
-                    cursor.close();
-
-                }
-                CreateDropListView();
-                CreateDropListView();
+            case R.id.btnGoToDBEditor:
+                Intent DBEditorPage = new Intent(this,DataBaseEditor.class);
+                startActivity(DBEditorPage);
                 break;
         }
         database.close();
@@ -232,25 +188,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void RemoveDrop(View v)
     {
-
-        //Пересчёт итоговой суммы с учётом удаления предмета
-        ArrayList<Integer> indexDel = new ArrayList<Integer>();
-        for(int i=0;i<Bag.size();i++)
+        switch (v.getId())
         {
-            //Ищем индексы для удаления
-            if(Bag.get(i).ID==v.getId())
-            {
-                indexDel.add(i);
-            }
-        }
-        //Удаляем элементы, индексы которых находятся в indexDel
-        for(int i=indexDel.size()-1;i>-1;i--)
-        {
-            int index = indexDel.get(i);
-            Toast.makeText(this, "Удаление из базы и из корзины "+ Bag.get(index).NAME, Toast.LENGTH_SHORT).show();
-            Bag.remove(index);
-        }
 
+            case R.id.btnClearBag:
+                //Полностью очищает корзину покупок
+                Bag = new ArrayList<>();
+                break;
+
+            default:
+                //Удаляет первое вхождение предмета
+                for(int i=0; i<Bag.size();i++)
+                {
+                    if(Bag.get(i).ID==v.getId())
+                    {
+                        Toast.makeText(this, "Удаление из корзины "+ Bag.get(i).NAME, Toast.LENGTH_SHORT).show();
+                        Bag.remove(i);
+                        break;
+                    }
+                }
+                break;
+        }
         GetResultSum();
     }
 
