@@ -41,8 +41,8 @@ class ShopBag
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     ArrayList<ShopBag> Bag;
-     TextView total_price;
-     Button GoToDBEditor, ClearBag;
+     TextView total_price, txtCurrentUsername;
+     Button  ClearBag;
 
      TextView Currency;
      String currency;
@@ -51,20 +51,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
      SQLiteDatabase database;
 
+     String CurrentUser; //Логин авторизованного пользователя
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent  = getIntent();
+        this.CurrentUser = intent.getStringExtra("User");//Получаем логин авторизованного пользователя
+
+
         Bag = new ArrayList<>();
         currency = " $";
         Currency = findViewById(R.id.lbCurrency);
         Currency.setText(currency);
 
-
-
-        GoToDBEditor = findViewById(R.id.btnGoToDBEditor);
-        GoToDBEditor.setOnClickListener(this::onClick);
+        txtCurrentUsername = findViewById(R.id.txtCurrentUser);
+        txtCurrentUsername.setText("User: "+CurrentUser);
 
         ClearBag = findViewById(R.id.btnClearBag);
         ClearBag.setOnClickListener(this::RemoveDrop);
@@ -139,16 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        database = dbHelper.getWritableDatabase();
-        switch (v.getId())
-        {
 
-            case R.id.btnGoToDBEditor:
-                Intent DBEditorPage = new Intent(this,DataBaseEditor.class);
-                startActivity(DBEditorPage);
-                break;
-        }
-        database.close();
     }
 
     public void AddToShopBag(View v)

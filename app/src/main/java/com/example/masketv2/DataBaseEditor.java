@@ -30,13 +30,15 @@ public class DataBaseEditor extends AppCompatActivity implements View.OnClickLis
 
     SQLiteDatabase database;
 
+    String CurrentUser;//Логин авторизаванного пользователя
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database_editor);
 
-
+        Intent intent  = getIntent();
+        this.CurrentUser = intent.getStringExtra("User");//Получаем логин авторизованного пользователя
 
 
         currency = " $";
